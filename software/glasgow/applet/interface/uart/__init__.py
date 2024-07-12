@@ -147,7 +147,7 @@ class UARTApplet(GlasgowApplet):
     are present in received data.
     """
 
-    __pins = ("rx", "tx")
+    __pins = ("rx", "tx", "tx_inverted")
 
     @classmethod
     def add_build_arguments(cls, parser, access):

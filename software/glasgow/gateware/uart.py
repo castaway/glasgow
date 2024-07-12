@@ -25,6 +25,11 @@ class UARTBus(Elaboratable):
             self.tx_t = pads.tx_t
             self.tx_o = Signal(init=1)
 
+        self.has_tx_inverted = hasattr(pads, "tx_inverted_t")
+        if self.has_tx_inverted:
+            self.tx_inverted_t = pads.tx_inverted_t
+            self.tx_inverted_o = Signal(init=0)
+
     def elaborate(self, platform):
         m = Module()
 
@@ -34,6 +39,13 @@ class UARTBus(Elaboratable):
                 m.d.comb += self.tx_t.o.eq(~self.tx_o)
             else:
                 m.d.comb += self.tx_t.o.eq(self.tx_o)
+
+        if self.has_tx_inverted:
+            m.d.comb += self.tx_inverted_t.oe.eq(1)
+            if self.invert_tx:
+                m.d.comb += self.tx_t.o.eq(self.tx_o)
+            else:
+                m.d.comb += self.tx_t.o.eq(~self.tx_o)
 
         if self.has_rx:
             if self.invert_rx:
@@ -121,6 +133,7 @@ class UART(Elaboratable):
         self.rx_err  = Signal()
 
         self.tx_data = Signal(data_bits)
+        self.tx_inverted_data = Signal(data_bits)
         self.tx_rdy  = Signal()
         self.tx_ack  = Signal()
 
