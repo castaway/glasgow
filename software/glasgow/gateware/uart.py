@@ -43,9 +43,9 @@ class UARTBus(Elaboratable):
         if self.has_tx_inverted:
             m.d.comb += self.tx_inverted_t.oe.eq(1)
             if self.invert_tx:
-                m.d.comb += self.tx_t.o.eq(self.tx_o)
+                m.d.comb += self.tx_inverted_t.o.eq(self.tx_o)
             else:
-                m.d.comb += self.tx_t.o.eq(~self.tx_o)
+                m.d.comb += self.tx_inverted_t.o.eq(~self.tx_o)
 
         if self.has_rx:
             if self.invert_rx:
